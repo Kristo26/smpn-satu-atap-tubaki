@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="id" class="h-full">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ujian Akhir Sekolah</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&amp;family=Playfair+Display:wght@700;800;900&amp;display=swap" rel="stylesheet">
+  <style>
+html, body { height: 100%; margin: 0; font-family: 'Poppins', sans-serif; }
+body { overflow: auto; }
+.app-wrapper { width: 100%; min-height: 100%; }
+.sky-bg { background: linear-gradient(180deg, #87CEEB 0%, #B0E0F6 30%, #D4F1FF 60%, #E8F8FF 100%); }
+.cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; animation: floatCloud linear infinite; }
+@keyframes floatCloud { 0% { transform: translateX(-200px); } 100% { transform: translateX(calc(100vw + 200px)); } }
+.glass-card { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 8px 32px rgba(0,80,150,0.12); }
+.btn-primary { background: linear-gradient(135deg, #2563EB, #1D4ED8); color: white; transition: all 0.2s; }
+.btn-primary:hover { background: linear-gradient(135deg, #1D4ED8, #1E40AF); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(37,99,235,0.4); }
+.btn-danger { background: linear-gradient(135deg, #EF4444, #DC2626); color: white; transition: all 0.2s; }
+.btn-danger:hover { background: linear-gradient(135deg, #DC2626, #B91C1C); }
+.btn-success { background: linear-gradient(135deg, #10B981, #059669); color: white; transition: all 0.2s; }
+.btn-success:hover { background: linear-gradient(135deg, #059669, #047857); }
+.option-btn { transition: all 0.2s; border: 2px solid #E5E7EB; }
+.option-btn:hover { border-color: #2563EB; background: #EFF6FF; }
+.option-btn.selected { border-color: #2563EB; background: #DBEAFE; }
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 9999; padding: 12px 24px; border-radius: 12px; color: white; font-weight: 600; animation: slideDown 0.3s ease; }
+@keyframes slideDown { from { opacity: 0; transform: translateX(-50%) translateY(-20px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+.toast-error { background: #EF4444; }
+.toast-success { background: #10B981; }
+.toast-warning { background: #F59E0B; }
+.fade-in { animation: fadeIn 0.4s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.timer-warning { animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@media print {
+  .no-print { display: none !important; }
+  .print-only { display: block !important; }
+  body { background: white !important; }
+  .sky-bg { background: white !important; }
+  .glass-card { background: white !important; box-shadow: none !important; border: 1px solid #ccc !important; }
+}
+.print-only { display: none; }
+</style>
+  <style>body { box-sizing: border-box; }</style>
+ </head>
+ <body class="h-full">
+  <div id="app" class="app-wrapper sky-bg relative overflow-auto h-full">
+   <!-- Clouds -->
+   <div class="cloud" style="width:120px;height:40px;top:8%;left:-200px;animation-duration:25s;animation-delay:0s;"></div>
+   <div class="cloud" style="width:80px;height:30px;top:15%;left:-200px;animation-duration:30s;animation-delay:5s;"></div>
+   <div class="cloud" style="width:150px;height:45px;top:5%;left:-200px;animation-duration:35s;animation-delay:10s;"></div><!-- Toast container -->
+   <div id="toast-container"></div><!-- SCREEN: Mode Selection -->
+   <div id="screen-mode" class="flex items-center justify-center min-h-full p-4 relative z-10">
+    <div class="glass-card rounded-3xl p-8 max-w-lg w-full text-center fade-in">
+     <div class="flex items-center justify-center gap-4 mb-2">
+      <img src="https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/logo%20pemda.png?raw=true" alt="Logo Pemda" class="w-16 h-16 object-contain" loading="lazy" onerror="console.error('Image failed:',this.src);this.style.background='#dbeafe';this.alt='Logo';">
+      <div>
+       <h1 id="h-exam-title" class="font-bold text-gray-800" style="font-size:22px;font-family:'Playfair Display',serif;">UJIAN AKHIR SEKOLAH</h1>
+       <h2 id="h-school-name" class="font-semibold text-gray-700" style="font-size:18px;">SMPN SATU ATAP TUBAKI</h2>
+      </div><img src="https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Logo%20tut%20wuri.png?raw=true" alt="Logo Tut Wuri" class="w-16 h-16 object-contain" loading="lazy" onerror="console.error('Image failed:',this.src);this.style.background='#dbeafe';this.alt='Logo';">
+     </div>
+     <p class="text-xs text-gray-500 mb-1">Jln. Haliwen, Desa Dubesi, Kec. Nanaet Duabesi, Kab. Belu</p>
+     <div class="w-full h-px bg-gradient-to-r from-transparent via-blue-400 to-transparent my-4"></div>
+     <p id="h-subject" class="font-bold text-blue-700 text-lg mb-1">MATA PELAJARAN : <span id="subject-value">MATEMATIKA</span></p>
+     <p class="text-gray-500 text-sm mb-6">SELASA, 28 APRIL 2026</p>
+     <p class="text-gray-600 mb-4 text-sm">Pilih mode untuk masuk:</p>
+     <div class="flex gap-4 justify-center">
+      <button onclick="showScreen('screen-login-guru')" class="btn-primary px-8 py-3 rounded-xl font-semibold flex items-center gap-2"><i data-lucide="shield" style="width:18px;height:18px;"></i> Mode Guru</button> <button onclick="showScreen('screen-login-siswa')" class="btn-success px-8 py-3 rounded-xl font-semibold flex items-center gap-2"><i data-lucide="user" style="width:18px;height:18px;"></i> Mode Siswa</button>
+     </div>
+    </div>
+   </div><!-- SCREEN: Login Guru -->
+   <div id="screen-login-guru" class="hidden flex items-center justify-center min-h-full p-4 relative z-10">
+    <div class="glass-card rounded-3xl p-8 max-w-md w-full text-center fade-in">
+     <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="shield" style="width:32px;height:32px;color:#2563EB;"></i>
+     </div>
+     <h2 class="text-xl font-bold text-gray-800 mb-1">Login Guru</h2>
+     <p class="text-gray-500 text-sm mb-6">Masukkan password untuk mengakses mode guru</p>
+     <form onsubmit="loginGuru(event)">
+      <label for="guru-pass" class="sr-only">Password Guru</label> <input id="guru-pass" type="password" placeholder="Masukkan password..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none mb-4 text-center"> <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold">Masuk</button>
+     </form><button onclick="showScreen('screen-mode')" class="mt-4 text-gray-500 hover:text-gray-700 text-sm flex items-center justify-center gap-1 mx-auto"><i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Kembali</button>
+    </div>
+   </div><!-- SCREEN: Login Siswa -->
+   <div id="screen-login-siswa" class="hidden flex items-center justify-center min-h-full p-4 relative z-10">
+    <div class="glass-card rounded-3xl p-8 max-w-md w-full text-center fade-in">
+     <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="user" style="width:32px;height:32px;color:#059669;"></i>
+     </div>
+     <h2 class="text-xl font-bold text-gray-800 mb-1">Login Siswa</h2>
+     <p class="text-gray-500 text-sm mb-4">Pilih nama dan masukkan password</p>
+     <form onsubmit="loginSiswa(event)">
+      <label for="siswa-name" class="sr-only">Nama Siswa</label> <select id="siswa-name" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none mb-3 bg-white"> <option value="">-- Pilih Nama --</option> </select> <label for="siswa-pass" class="sr-only">Password Siswa</label> <input id="siswa-pass" type="password" placeholder="Masukkan password..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-green-500 focus:ring-2 focus:ring-green-200 outline-none mb-4 text-center"> <button type="submit" class="btn-success w-full py-3 rounded-xl font-semibold">Masuk</button>
+     </form><button onclick="showScreen('screen-mode')" class="mt-4 text-gray-500 hover:text-gray-700 text-sm flex items-center justify-center gap-1 mx-auto"><i data-lucide="arrow-left" style="width:14px;height:14px;"></i> Kembali</button>
+    </div>
+   </div><!-- SCREEN: Ujian Siswa -->
+   <div id="screen-exam" class="hidden min-h-full p-4 relative z-10">
+    <div class="max-w-3xl mx-auto">
+     <!-- Header -->
+     <div class="glass-card rounded-2xl p-4 mb-4 flex items-center justify-between no-print">
+      <div>
+       <p class="font-bold text-gray-800 text-sm" id="exam-student-name"></p>
+       <p class="text-xs text-gray-500">Mata Pelajaran Matematika</p>
+      </div>
+      <div class="flex items-center gap-3">
+       <div id="violation-badge" class="hidden bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-lg">
+        Pelanggaran: <span id="violation-count">0</span>/5
+       </div>
+       <div id="timer-display" class="bg-blue-600 text-white px-4 py-2 rounded-xl font-bold text-lg flex items-center gap-2"><i data-lucide="clock" style="width:18px;height:18px;"></i><span id="timer-text">120:00</span>
+       </div><button onclick="confirmFinish()" class="btn-danger px-4 py-2 rounded-xl text-sm font-semibold">Selesai</button>
+      </div>
+     </div><!-- Question navigation -->
+     <div class="glass-card rounded-2xl p-3 mb-4 no-print">
+      <p class="text-xs text-gray-500 mb-2 font-semibold">Navigasi Soal:</p>
+      <div id="nav-buttons" class="flex flex-wrap gap-1"></div>
+     </div><!-- Question display -->
+     <div id="question-area" class="glass-card rounded-2xl p-6 mb-4 fade-in"></div><!-- Navigation -->
+     <div class="flex justify-between no-print">
+      <button id="btn-prev" onclick="navigateQ(-1)" class="bg-white hover:bg-gray-50 px-6 py-2 rounded-xl font-semibold text-gray-700 border border-gray-200 flex items-center gap-1"><i data-lucide="chevron-left" style="width:16px;height:16px;"></i> Sebelumnya</button> <button id="btn-next" onclick="navigateQ(1)" class="btn-primary px-6 py-2 rounded-xl font-semibold flex items-center gap-1">Selanjutnya <i data-lucide="chevron-right" style="width:16px;height:16px;"></i></button>
+     </div>
+    </div>
+   </div><!-- SCREEN: Finish Confirmation -->
+   <div id="screen-confirm-finish" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
+    <div class="glass-card rounded-3xl p-8 max-w-sm w-full text-center fade-in">
+     <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="alert-triangle" style="width:32px;height:32px;color:#F59E0B;"></i>
+     </div>
+     <h3 class="font-bold text-lg text-gray-800 mb-2">Selesaikan Ujian?</h3>
+     <p class="text-gray-500 text-sm mb-2">Soal dijawab: <span id="answered-count" class="font-bold text-blue-600">0</span> / 35</p>
+     <p class="text-gray-400 text-xs mb-6">Setelah selesai, Anda tidak dapat mengerjakan lagi.</p>
+     <div class="flex gap-3">
+      <button onclick="hideConfirmFinish()" class="flex-1 bg-gray-100 hover:bg-gray-200 py-3 rounded-xl font-semibold text-gray-700">Kembali</button> <button onclick="finishExam()" class="flex-1 btn-danger py-3 rounded-xl font-semibold">Ya, Selesai</button>
+     </div>
+    </div>
+   </div><!-- SCREEN: Hasil Siswa -->
+   <div id="screen-result" class="hidden flex items-center justify-center min-h-full p-4 relative z-10">
+    <div class="glass-card rounded-3xl p-8 max-w-md w-full text-center fade-in">
+     <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4"><i data-lucide="check-circle" style="width:40px;height:40px;color:#059669;"></i>
+     </div>
+     <h2 class="text-xl font-bold text-gray-800 mb-1">Ujian Selesai!</h2>
+     <p id="result-name" class="text-gray-500 mb-4"></p>
+     <div class="grid grid-cols-3 gap-3 mb-6">
+      <div class="bg-green-50 rounded-xl p-3">
+       <p class="text-2xl font-bold text-green-600" id="result-correct">0</p>
+       <p class="text-xs text-gray-500">Benar</p>
+      </div>
+      <div class="bg-red-50 rounded-xl p-3">
+       <p class="text-2xl font-bold text-red-500" id="result-wrong">0</p>
+       <p class="text-xs text-gray-500">Salah</p>
+      </div>
+      <div class="bg-blue-50 rounded-xl p-3">
+       <p class="text-2xl font-bold text-blue-600" id="result-score">0</p>
+       <p class="text-xs text-gray-500">Nilai</p>
+      </div>
+     </div><button onclick="logoutSiswa()" class="btn-primary w-full py-3 rounded-xl font-semibold">Keluar</button>
+    </div>
+   </div><!-- SCREEN: Dashboard Guru -->
+   <div id="screen-guru" class="hidden min-h-full p-4 relative z-10">
+    <div class="max-w-5xl mx-auto">
+     <div class="glass-card rounded-2xl p-4 mb-4 flex items-center justify-between no-print">
+      <div>
+       <h2 class="font-bold text-gray-800 text-lg">Dashboard Guru</h2>
+       <p class="text-xs text-gray-500">UJIAN AKHIR SEKOLAH - Matematika</p>
+      </div>
+      <div class="flex gap-2">
+       <button onclick="printDaftarNilai()" class="bg-white hover:bg-gray-50 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 border border-gray-200 flex items-center gap-1"><i data-lucide="printer" style="width:16px;height:16px;"></i> Cetak</button> <button onclick="resetAllConfirm()" class="btn-danger px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1"><i data-lucide="refresh-cw" style="width:14px;height:14px;"></i> Reset Semua</button> <button onclick="logoutGuru()" class="bg-white hover:bg-gray-50 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700 border border-gray-200 flex items-center gap-1"><i data-lucide="log-out" style="width:14px;height:14px;"></i> Logout</button>
+      </div>
+     </div><!-- Reset all confirm -->
+     <div id="reset-all-confirm" class="hidden glass-card rounded-2xl p-4 mb-4 border-2 border-red-300 no-print">
+      <p class="text-red-600 font-semibold mb-2">Yakin reset semua data siswa?</p>
+      <div class="flex gap-2">
+       <button onclick="resetAll()" class="btn-danger px-4 py-2 rounded-xl text-sm font-semibold">Ya, Reset Semua</button> <button onclick="document.getElementById('reset-all-confirm').classList.add('hidden')" class="bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-xl text-sm font-semibold text-gray-700">Batal</button>
+      </div>
+     </div><!-- Print header -->
+     <div class="print-only text-center mb-6">
+      <div class="flex items-center justify-center gap-3 mb-2">
+       <img src="https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/logo%20pemda.png?raw=true" class="w-12 h-12" onerror="this.style.display='none'">
+       <div>
+        <h1 style="font-size:18px;font-weight:bold;">UJIAN AKHIR SEKOLAH</h1>
+        <h2 style="font-size:15px;font-weight:600;">SMPN SATU ATAP TUBAKI</h2>
+       </div><img src="https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Logo%20tut%20wuri.png?raw=true" class="w-12 h-12" onerror="this.style.display='none'">
+      </div>
+      <p style="font-size:11px;">Jln. Haliwen, Desa Dubesi, Kec. Nanaet Duabesi, Kab. Belu</p>
+      <p style="font-size:13px;font-weight:bold;margin-top:4px;">DAFTAR NILAI MATEMATIKA - SELASA, 28 APRIL 2026</p>
+      <hr style="margin-top:8px;">
+     </div><!-- Table -->
+     <div class="glass-card rounded-2xl overflow-hidden">
+      <table class="w-full text-sm">
+       <thead class="bg-blue-600 text-white">
+        <tr>
+         <th class="px-3 py-3 text-left">No</th>
+         <th class="px-3 py-3 text-left">Nama Siswa</th>
+         <th class="px-3 py-3 text-center">Status</th>
+         <th class="px-3 py-3 text-center">Benar</th>
+         <th class="px-3 py-3 text-center">Salah</th>
+         <th class="px-3 py-3 text-center">Nilai</th>
+         <th class="px-3 py-3 text-center no-print">Aksi</th>
+        </tr>
+       </thead>
+       <tbody id="guru-table-body"></tbody>
+      </table>
+     </div><!-- Detail modal -->
+     <div id="detail-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4 no-print">
+      <div class="glass-card rounded-3xl p-6 max-w-2xl w-full max-h-[80%] overflow-auto fade-in">
+       <div class="flex items-center justify-between mb-4">
+        <h3 id="detail-title" class="font-bold text-lg text-gray-800"></h3><button onclick="document.getElementById('detail-modal').classList.add('hidden')" class="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center"><i data-lucide="x" style="width:16px;height:16px;"></i></button>
+       </div>
+       <div id="detail-content"></div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+// ===== DATA =====
+const STUDENTS = ["ANGRIANA BUIK","ANTONIUS FANDI BEREK","ANTONIUS FAHIK","APRIANO REVANDI SERAN","DOMINIKA SERLIANA DAHU","IMELDA LEKI","MARGARITA BAULUAN","MARIA MAGDALENA BARU","MARIA MARLINCE BAU LUAN","MARIA METRIANA BUIK","SEBASTIANUS FAHIK","TITUS JEFRIANUS BEREK","TRESIA OLIVIANA MUTI","FERDINANDUS LEKI","YAKOBUS MAU","YANUARIUS MAU","YOHANES JHOHERI MAUK","RICARDUS ARDIANUS"];
+const GURU_PASS = "Matematika26";
+const SISWA_PASS = "Matematika";
+const EXAM_TIME = 120 * 60; // 120 minutes in seconds
+const TOTAL_QUESTIONS = 35;
+const SCORE_PER_CORRECT = 2;
+const MAX_SCORE = TOTAL_QUESTIONS * SCORE_PER_CORRECT; // 70
+
+const QUESTIONS = [
+  {
+    text: 'Perhatikan urutan bilangan berikut.\n(i) -20, -21, 19, 25\n(ii) -14, -9, 5, 26\n(iii) -8, -16, 17, 27\n(iv) -17, -10, -2, 8\nUrutan bilangan bulat dari yang terkecil adalah…',
+    options: ['(i) dan (iii)', '(ii) dan (iv)', '(i), (ii), dan (iii)', '(iii) dan (iv)'],
+    answer: 1
+  },
+  {
+    text: 'Hasil dari 12 × (50 - 25) + (-72 ÷ (-6)) adalah...',
+    options: ['300', '305', '310', '312'],
+    answer: 3
+  },
+  {
+    text: 'Hasil dari 4/5 - 1/3 - 1/15 adalah…',
+    options: ['1/5', '2/5', '7/15', '3/4'],
+    answer: 1
+  },
+  {
+    text: 'Ibu Tania membeli 1 liter minyak goreng. Ditengah jalan minyak goreng tersebut tumpah. Dan minyak goreng yang tersisa adalah 1/3. Berapa banyak minyak goreng yang tumpah?',
+    options: ['5/3', '4/3', '3/3', '2/3'],
+    answer: 3
+  },
+  {
+    text: 'Untuk membuat 5 potong kue dibutuhkan 250 gram tepung terigu. Jika ingin membuat 8 potong kue, berapa gram tepung terigu yang dibutuhkan?',
+    options: ['300 gram', '350 gram', '400 gram', '450 gram'],
+    answer: 2
+  },
+  {
+    text: 'Sebuah mobil membutuhkan 8 liter bensin untuk menempuh jarak 96 km. Berapa bensin yang dibutuhkan untuk menempuh jarak 150 km?',
+    options: ['10 liter', '12,5 liter', '14 liter', '15 liter'],
+    answer: 1
+  },
+  {
+    text: 'Bentuk paling sederhana dari 5x²y - 3xy² - 7x²y + 6xy² adalah…',
+    options: ['-12x²y + 3xy²', '-2x²y + 9xy²', '-2x²y + 3xy²', '-12x²y + 9xy²'],
+    answer: 2
+  },
+  {
+    text: 'Bentuk sederhana dari (x² - 1)/(x² - 2x + 1) adalah…',
+    options: ['(x - 1)/(x + 1)', '(x + 1)/(x - 1)', '(x - 1)/(x + 2)', '(x + 1)/(x - 2)'],
+    answer: 1
+  },
+  {
+    text: 'Selembar foto berukuran 15 cm x 20 cm ditempelkan pada selembar karton. Sisi karton pada sebelah kiri, kanan, dan atas adalah sama yaitu 2,5 cm; tetapi pada sisi bawah tidak sama. Agar foto tersebut sebangun dengan karton, lebar karton bagian bawah yang tidak tertutup foto adalah…cm',
+    options: ['1,25', '2,5', '3,75', '5'],
+    answer: 0
+  },
+  {
+    text: 'Perhatikan tabel data tinggi badan siswa berikut!\n\nBerdasarkan tabel, banyak siswa yang memiliki tinggi badan di atas rata-rata adalah…',
+    options: ['26 siswa', '15 siswa', '11 siswa', '6 siswa'],
+    answer: 2,
+    image: 'https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Screenshot%202026-04-11%20141053.png?raw=true'
+  },
+  {
+    text: 'Bentuk bilangan berpangkat dari 0,5 × 0,5 × 0,5 × 0,5 adalah…',
+    options: ['(0,5)²', '(0,5)³', '(0,5)⁴', '(0,5)⁵'],
+    answer: 2
+  },
+  {
+    text: 'Sederhanakan bilangan pecahan berikut dengan merasionalkan penyebut:\n1/√3 adalah…',
+    options: ['1/2 √2', '1/2 √3', '3/3 √3', '1/3 √3'],
+    answer: 3
+  },
+  {
+    text: 'Suatu segitiga siku-siku memiliki panjang hipotenusa 34 cm dan salah satu sisi siku-siku adalah 16 cm. Panjang sisi siku-siku lainnya adalah…',
+    options: ['30 cm', '29 cm', '31 cm', '21 cm'],
+    answer: 0
+  },
+  {
+    text: 'Berek, Moruk, dan Seran mencoba mengukur lebar sungai. Berdasarkan ilustrasi, jarak Berek dan Moruk adalah 6 m, dan jarak Berek ke Seran (garis miring) adalah 10 m. Jika segitiga yang terbentuk adalah segitiga siku-siku, maka lebar sungai tersebut adalah…',
+    options: ['7 m', '6 m', '8 m', '9 m'],
+    answer: 2
+  },
+  {
+    text: 'Tentukan nilai x yang memenuhi persamaan:\n-3 = 2x + 9 adalah…',
+    options: ['-5', '-6', '-7', '5'],
+    answer: 1
+  },
+  {
+    text: 'Ubah kalimat berikut menjadi pertidaksamaan linier satu variabel:\n"Bilangan 9 lebih dari z tidak lebih dari 21."',
+    options: ['9 + z ≤ 21', 'z + 9 ≤ 21', '9 + z ≥ 21', 'z + 9 ≥ 21'],
+    answer: 0
+  },
+  {
+    text: 'Dari diagram panah berikut yang termasuk korespondensi satu-satu adalah…',
+    options: ['(i)', '(ii)', '(iii)', '(iv)'],
+    answer: 3,
+    image: 'https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Screenshot%202026-04-11%20151509.png?raw=true'
+  },
+  {
+    text: 'Tentukan banyak korespondensi satu-satu dengan menggunakan rumus dari himpunan A = {1,2,3,4,5} ke himpunan B = {a,b,c,d,e}…',
+    options: ['100', '120', '140', '160'],
+    answer: 1
+  },
+  {
+    text: 'Gradien garis m pada gambar dibawah ini adalah…',
+    options: ['-1', '-1/4', '-4', '1'],
+    answer: 0,
+    image: 'https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Screenshot%202026-04-11%20155201.png?raw=true'
+  },
+  {
+    text: 'Diagram yang disajikan dalam bentuk gambar atau lambang disebut…',
+    options: ['Diagram batang', 'Diagram garis', 'Piktogram', 'Diagram lingkaran'],
+    answer: 2
+  },
+  {
+    text: 'Dibawah ini yang merupakan sistem persamaan linear dua variabel adalah…',
+    options: ['6p² - 2q = 20', '2x - 4y = 12', '52 - 18 = 64', '5b² = 10'],
+    answer: 1
+  },
+  {
+    text: 'Himpunan penyelesaian dari x + y = 8 dan 3x - y = 8 adalah…',
+    options: ['{(2,2)}', '{(2,4)}', '{(4,4)}', '{(4,2)}'],
+    answer: 2
+  },
+  {
+    text: 'Harga 5 pensil dan dua buku Rp 26.000,00, sedangkan harga 3 pensil dan 4 buku Rp 38.000,00, jika harga 1 pensil dimisalkan dengan x dan harga 1 buku dimisalkan dengan y, maka pemodelan matematika yang berkaitan dengan penyelesaian tersebut adalah…',
+    options: ['5x + 2y = 26.000 dan 4x + 3y = 38.000', '5x + 2y = 26.000 dan 3x + 4y = 38.000', '2x + 5y = 26.000 dan 3x + 4y = 38.000', '2x + 5y = 26.000 dan 4x + 3y = 38.000'],
+    answer: 1
+  },
+  {
+    text: 'Jika x dan y adalah penyelesaian dari sistem persamaan 7x + 2y = 19 dan 4x - 3y = 15, nilai dari 3x - 2y adalah…',
+    options: ['-9', '-3', '7', '11'],
+    answer: 1
+  },
+  {
+    text: 'Rani membeli 2 kg jeruk dan 3 kg mangga Rp 44.000,00 sedangkan Rina membeli 5 kg jeruk dan 4 kg mangga seharga Rp 82.000,00. Jika Rani membeli jeruk dan mangga masing-masing 1 kg, maka berapa uang yang harus dibayar oleh Rani…',
+    options: ['Rp 14.000,00', 'Rp 16.000,00', 'Rp 18.000,00', 'Rp 20.000,00'],
+    answer: 2
+  },
+  {
+    text: 'Gambar dibawah ini menunjukan kubus dan jaring-jaring kubus.\nTitik 1, 2, 3, dan 4 berturut-turut mewakili titik pojok…',
+    options: ['H, E, G dan F', 'E, H, F dan D', 'E, F, B dan G', 'H, F, B dan G'],
+    answer: 3,
+    image: 'https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Screenshot%202026-04-11%20155254.png?raw=true'
+  },
+  {
+    text: 'Sebuah bak mandi berbentuk kubus, dengan luas seluruh permukaan pada bak mandi adalah 150 cm², maka volume pada bak mandi tersebut adalah…cm³',
+    options: ['625', '225', '125', '121'],
+    answer: 2
+  },
+  {
+    text: 'Sebuah kerangka balok terbuat dari kawat dengan ukuran panjang 30 cm, lebar 40 cm dan tinggi 45 cm, jika panjang kawat minimal yang diperlukan untuk membuat 2 model kerangka balok adalah…cm',
+    options: ['115', '230', '460', '920'],
+    answer: 3
+  },
+  {
+    text: 'Alas sebuah prisma berbentuk belah ketupat dengan panjang diagonal 18 cm dan 24 cm, jika tinggi prisma 20 cm, maka volume pada prisma tersebut adalah…cm³',
+    options: ['8.640', '4.320', '2.160', '1.440'],
+    answer: 1
+  },
+  {
+    text: 'Perhatikan limas TABCD dibawah ini dengan alas berbentuk persegi panjang.\nVolume pada limas tersebut adalah…',
+    options: ['4.860 cm³', '3.888 cm³', '1.620 cm³', '1.420 cm³'],
+    answer: 1,
+    image: 'https://github.com/Kristo26/smpn-satu-atap-tubaki/blob/main/Screenshot%202026-04-11%20155323.png?raw=true'
+  },
+  {
+    text: 'Diketahui titik A (-4,6) dipetakan oleh pencerminan terhadap garis x = 0 dan y = 0, koordinat titik hasil pemetaan A adalah…',
+    options: ['(4,-6)', '(-6,4)', '(-6,-4)', '(-4,-6)'],
+    answer: 1
+  },
+  {
+    text: 'Sebuah titik P (2,3) direfleksikan terhadap sumbu y, kemudian dilatasikan dengan pusat O(0,2). Bayangan yang dapat dibentuk adalah…',
+    options: ['(-4,6)', '(-4,-6)', '(6,4)', '(4,-6)'],
+    answer: 0
+  },
+  {
+    text: 'Tentukan bayangan refleksi dari C(2,8), jika dicerminkan oleh sumbu x adalah…',
+    options: ['C\'(-2,-8)', 'C\'(-2,8)', 'C\'(2,8)', 'C\'(2,-8)'],
+    answer: 3
+  },
+  {
+    text: 'Sebuah dadu bermata enam dilemparkan satu kali, maka banyak anggota ruang sampel dari percobaan tersebut adalah…',
+    options: ['5', '10', '2', '6'],
+    answer: 3
+  },
+  {
+    text: 'Dalam sebuah kotak terdapat 3 bola merah dan 5 bola biru, peluang terambil bola biru adalah…',
+    options: ['1/2', '1/3', '5/8', '1/5'],
+    answer: 2
+  }
+];
+
+// ===== STATE =====
+let allRecords = [];
+let currentStudent = null;
+let currentQ = 0;
+let studentAnswers = new Array(TOTAL_QUESTIONS).fill(-1);
+let timerInterval = null;
+let timeLeft = EXAM_TIME;
+let violationCount = 0;
+let examActive = false;
+
+// ===== SDK =====
+const defaultConfig = {
+  exam_title: 'UJIAN AKHIR SEKOLAH',
+  school_name: 'SMPN SATU ATAP TUBAKI',
+  subject_name: 'MATEMATIKA',
+  background_color: '#87CEEB',
+  surface_color: '#FFFFFF',
+  text_color: '#1F2937',
+  primary_action_color: '#2563EB',
+  secondary_action_color: '#059669',
+  font_family: 'Poppins',
+  font_size: 16
+};
+
+const dataHandler = {
+  onDataChanged(data) {
+    allRecords = data;
+    renderGuruTable();
+  }
+};
+
+async function initApp() {
+  await window.dataSdk.init(dataHandler);
+  window.elementSdk.init({
+    defaultConfig,
+    onConfigChange: async (config) => {
+      const c = Object.assign({}, defaultConfig, config);
+      const el = (id) => document.getElementById(id);
+      if (el('h-exam-title')) el('h-exam-title').textContent = c.exam_title;
+      if (el('h-school-name')) el('h-school-name').textContent = c.school_name;
+      if (el('h-subject')) el('h-subject').innerHTML = 'MATA PELAJARAN : <span id="subject-value">' + c.subject_name + '</span>';
+      document.querySelectorAll('.sky-bg').forEach(e => {
+        e.style.background = `linear-gradient(180deg, ${c.background_color} 0%, ${lighten(c.background_color, 40)} 60%, ${lighten(c.background_color, 60)} 100%)`;
+      });
+      document.querySelectorAll('.glass-card').forEach(e => {
+        e.style.background = `rgba(${hexToRgb(c.surface_color)}, 0.85)`;
+      });
+      document.body.style.fontFamily = `${c.font_family}, Poppins, sans-serif`;
+      document.body.style.color = c.text_color;
+      document.body.style.fontSize = c.font_size + 'px';
+    },
+    mapToCapabilities: (config) => {
+      const c = Object.assign({}, defaultConfig, config);
+      const mut = (key) => ({
+        get: () => c[key] || defaultConfig[key],
+        set: (v) => { c[key] = v; window.elementSdk.setConfig({[key]: v}); }
+      });
+      return {
+        recolorables: [mut('background_color'), mut('surface_color'), mut('text_color'), mut('primary_action_color'), mut('secondary_action_color')],
+        borderables: [],
+        fontEditable: mut('font_family'),
+        fontSizeable: mut('font_size')
+      };
+    },
+    mapToEditPanelValues: (config) => {
+      const c = Object.assign({}, defaultConfig, config);
+      return new Map([
+        ['exam_title', c.exam_title],
+        ['school_name', c.school_name],
+        ['subject_name', c.subject_name]
+      ]);
+    }
+  });
+  populateStudentSelect();
+}
+initApp();
+
+function hexToRgb(hex) {
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+function lighten(hex, pct) {
+  let r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  r = Math.min(255, r + Math.round((255-r)*pct/100));
+  g = Math.min(255, g + Math.round((255-g)*pct/100));
+  b = Math.min(255, b + Math.round((255-b)*pct/100));
+  return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
+}
+
+// ===== SCREENS =====
+function showScreen(id) {
+  ['screen-mode','screen-login-guru','screen-login-siswa','screen-exam','screen-result','screen-guru'].forEach(s => {
+    document.getElementById(s).classList.add('hidden');
+    document.getElementById(s).classList.remove('flex');
+  });
+  const el = document.getElementById(id);
+  el.classList.remove('hidden');
+  if (!['screen-exam','screen-guru'].includes(id)) el.classList.add('flex');
+  lucide.createIcons();
+}
+
+function showToast(msg, type = 'error') {
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.textContent = msg;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ===== STUDENT SELECT =====
+function populateStudentSelect() {
+  const sel = document.getElementById('siswa-name');
+  sel.innerHTML = '<option value="">-- Pilih Nama --</option>';
+  STUDENTS.sort().forEach(n => {
+    const o = document.createElement('option');
+    o.value = n; o.textContent = n;
+    sel.appendChild(o);
+  });
+}
+
+// ===== LOGIN =====
+function loginGuru(e) {
+  e.preventDefault();
+  const p = document.getElementById('guru-pass').value;
+  if (p === GURU_PASS) {
+    document.getElementById('guru-pass').value = '';
+    showScreen('screen-guru');
+  } else {
+    showToast('Password Anda salah!');
+  }
+}
+
+function loginSiswa(e) {
+  e.preventDefault();
+  const name = document.getElementById('siswa-name').value;
+  const pass = document.getElementById('siswa-pass').value;
+  if (!name) { showToast('Pilih nama terlebih dahulu!'); return; }
+  if (pass !== SISWA_PASS) { showToast('Password Anda salah!'); return; }
+  // Check if locked/completed
+  const rec = allRecords.find(r => r.student_name === name);
+  if (rec && (rec.completed || rec.locked)) {
+    showToast('Anda sudah menyelesaikan ujian dan tidak dapat login kembali!', 'warning');
+    return;
+  }
+  currentStudent = name;
+  document.getElementById('siswa-pass').value = '';
+  startExam(rec);
+}
+
+// ===== EXAM =====
+function startExam(existingRecord) {
+  examActive = true;
+  violationCount = 0;
+  currentQ = 0;
+  studentAnswers = new Array(TOTAL_QUESTIONS).fill(-1);
+  // Restore answers if exists
+  if (existingRecord && existingRecord.answers) {
+    try {
+      const saved = JSON.parse(existingRecord.answers);
+      if (Array.isArray(saved)) studentAnswers = saved;
+    } catch(e) {}
+  }
+  timeLeft = EXAM_TIME;
+  document.getElementById('exam-student-name').textContent = currentStudent;
+  document.getElementById('violation-badge').classList.add('hidden');
+  document.getElementById('violation-count').textContent = '0';
+  showScreen('screen-exam');
+  renderNavButtons();
+  renderQuestion();
+  startTimer();
+  setupAntiCheat();
+}
+
+function renderNavButtons() {
+  const c = document.getElementById('nav-buttons');
+  c.innerHTML = '';
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    const b = document.createElement('button');
+    b.textContent = i + 1;
+    b.className = `w-8 h-8 rounded-lg text-xs font-bold transition-all ${i === currentQ ? 'bg-blue-600 text-white' : studentAnswers[i] >= 0 ? 'bg-green-500 text-white' : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'}`;
+    b.onclick = () => { currentQ = i; renderQuestion(); renderNavButtons(); };
+    c.appendChild(b);
+  }
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const area = document.getElementById('question-area');
+  let imageHtml = '';
+  if (q.image) {
+    imageHtml = `<div class="mb-4 bg-gray-50 rounded-lg p-3 text-center"><img src="${q.image}" alt="Gambar soal ${currentQ + 1}" loading="lazy" class="max-w-full h-auto rounded-lg mx-auto" onerror="console.error('Image failed:',this.src);this.style.background='#e5e7eb';this.alt='Gambar tidak dapat ditampilkan';"></div>`;
+  }
+  area.innerHTML = `
+    <p class="text-xs text-gray-400 mb-1 font-semibold">Soal ${currentQ + 1} dari ${TOTAL_QUESTIONS}</p>
+    <p class="text-gray-800 font-medium mb-4 whitespace-pre-line">${escHtml(q.text)}</p>
+    ${imageHtml}
+    <div class="space-y-2">
+      ${q.options.map((o, i) => `
+        <button onclick="selectAnswer(${i})" class="option-btn w-full text-left px-4 py-3 rounded-xl flex items-center gap-3 ${studentAnswers[currentQ] === i ? 'selected' : ''}">
+          <span class="w-8 h-8 rounded-full ${studentAnswers[currentQ] === i ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'} flex items-center justify-center font-bold text-sm flex-shrink-0">${String.fromCharCode(65+i)}</span>
+          <span class="text-sm">${escHtml(o)}</span>
+        </button>
+      `).join('')}
+    </div>
+  `;
+  document.getElementById('btn-prev').style.visibility = currentQ > 0 ? 'visible' : 'hidden';
+  document.getElementById('btn-next').textContent = currentQ < TOTAL_QUESTIONS - 1 ? 'Selanjutnya' : '';
+  lucide.createIcons();
+}
+
+function escHtml(s) { const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+function selectAnswer(idx) {
+  studentAnswers[currentQ] = idx;
+  renderQuestion();
+  renderNavButtons();
+}
+
+function navigateQ(dir) {
+  const next = currentQ + dir;
+  if (next >= 0 && next < TOTAL_QUESTIONS) {
+    currentQ = next;
+    renderQuestion();
+    renderNavButtons();
+  }
+}
+
+// ===== TIMER =====
+function startTimer() {
+  clearInterval(timerInterval);
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      autoSubmit('Waktu habis!');
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  const txt = document.getElementById('timer-text');
+  txt.textContent = `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+  const td = document.getElementById('timer-display');
+  if (timeLeft <= 300) {
+    td.classList.remove('bg-blue-600');
+    td.classList.add('bg-red-500', 'timer-warning');
+  } else {
+    td.classList.add('bg-blue-600');
+    td.classList.remove('bg-red-500', 'timer-warning');
+  }
+}
+
+// ===== ANTI-CHEAT =====
+function setupAntiCheat() {
+  window._visHandler = () => {
+    if (!examActive) return;
+    if (document.hidden) {
+      violationCount++;
+      document.getElementById('violation-badge').classList.remove('hidden');
+      document.getElementById('violation-count').textContent = violationCount;
+      if (violationCount >= 5) {
+        autoSubmit('Anda terdeteksi membuka tab lain lebih dari 5 kali. Ujian ditutup otomatis.');
+      } else {
+        showToast(`Peringatan! Jangan tinggalkan halaman ujian. (${violationCount}/5)`, 'warning');
+      }
+    }
+  };
+  window._copyHandler = (e) => {
+    if (!examActive) return;
+    e.preventDefault();
+    violationCount++;
+    document.getElementById('violation-badge').classList.remove('hidden');
+    document.getElementById('violation-count').textContent = violationCount;
+    if (violationCount >= 5) {
+      autoSubmit('Anda terdeteksi melakukan copy/paste lebih dari 5 kali. Ujian ditutup otomatis.');
+    } else {
+      showToast(`Copy/Paste tidak diizinkan! (${violationCount}/5)`, 'warning');
+    }
+  };
+  document.addEventListener('visibilitychange', window._visHandler);
+  document.addEventListener('copy', window._copyHandler);
+  document.addEventListener('paste', window._copyHandler);
+  document.addEventListener('cut', window._copyHandler);
+}
+
+function cleanupAntiCheat() {
+  if (window._visHandler) document.removeEventListener('visibilitychange', window._visHandler);
+  if (window._copyHandler) {
+    document.removeEventListener('copy', window._copyHandler);
+    document.removeEventListener('paste', window._copyHandler);
+    document.removeEventListener('cut', window._copyHandler);
+  }
+}
+
+// ===== FINISH EXAM =====
+function confirmFinish() {
+  const answered = studentAnswers.filter(a => a >= 0).length;
+  document.getElementById('answered-count').textContent = answered;
+  document.getElementById('screen-confirm-finish').classList.remove('hidden');
+}
+function hideConfirmFinish() {
+  document.getElementById('screen-confirm-finish').classList.add('hidden');
+}
+
+async function autoSubmit(reason) {
+  examActive = false;
+  cleanupAntiCheat();
+  clearInterval(timerInterval);
+  showToast(reason, 'warning');
+  await saveResults(true);
+}
+
+async function finishExam() {
+  hideConfirmFinish();
+  examActive = false;
+  cleanupAntiCheat();
+  clearInterval(timerInterval);
+  await saveResults(false);
+}
+
+async function saveResults(locked) {
+  let correct = 0, wrong = 0;
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    if (studentAnswers[i] >= 0) {
+      if (studentAnswers[i] === QUESTIONS[i].answer) correct++;
+      else wrong++;
+    }
+  }
+  const totalScore = (correct * SCORE_PER_CORRECT);
+  const nilai = Math.round((totalScore / MAX_SCORE) * 100 * 100) / 100;
+
+  const existing = allRecords.find(r => r.student_name === currentStudent);
+  const data = {
+    student_name: currentStudent,
+    answers: JSON.stringify(studentAnswers),
+    correct_count: correct,
+    wrong_count: wrong,
+    score: nilai,
+    completed: true,
+    locked: locked,
+    violation_count: violationCount,
+    submitted_at: new Date().toISOString()
+  };
+
+  let result;
+  if (existing) {
+    result = await window.dataSdk.update({...existing, ...data});
+  } else {
+    if (allRecords.length >= 999) { showToast('Batas data tercapai!', 'warning'); return; }
+    result = await window.dataSdk.create(data);
+  }
+
+  if (!result.isOk) { showToast('Gagal menyimpan data!'); }
+
+  // Show result
+  document.getElementById('result-name').textContent = currentStudent;
+  document.getElementById('result-correct').textContent = correct;
+  document.getElementById('result-wrong').textContent = wrong;
+  document.getElementById('result-score').textContent = nilai;
+  showScreen('screen-result');
+}
+
+function logoutSiswa() {
+  currentStudent = null;
+  showScreen('screen-mode');
+}
+
+function logoutGuru() {
+  showScreen('screen-mode');
+}
+
+// ===== GURU TABLE =====
+function renderGuruTable() {
+  const tbody = document.getElementById('guru-table-body');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+  const sorted = [...STUDENTS].sort();
+  sorted.forEach((name, idx) => {
+    const rec = allRecords.find(r => r.student_name === name);
+    const tr = document.createElement('tr');
+    tr.className = idx % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+    tr.innerHTML = `
+      <td class="px-3 py-2">${idx + 1}</td>
+      <td class="px-3 py-2 font-medium">${escHtml(name)}</td>
+      <td class="px-3 py-2 text-center">
+        ${rec && rec.completed ? '<span class="bg-green-100 text-green-700 text-xs font-bold px-2 py-1 rounded-full">Selesai</span>' : rec && rec.locked ? '<span class="bg-red-100 text-red-600 text-xs font-bold px-2 py-1 rounded-full">Terkunci</span>' : '<span class="bg-gray-100 text-gray-500 text-xs font-bold px-2 py-1 rounded-full">Belum</span>'}
+      </td>
+      <td class="px-3 py-2 text-center font-bold ${rec ? 'text-green-600' : 'text-gray-300'}">${rec ? rec.correct_count : '-'}</td>
+      <td class="px-3 py-2 text-center font-bold ${rec ? 'text-red-500' : 'text-gray-300'}">${rec ? rec.wrong_count : '-'}</td>
+      <td class="px-3 py-2 text-center font-bold ${rec ? 'text-blue-600' : 'text-gray-300'}">${rec ? rec.score : '-'}</td>
+      <td class="px-3 py-2 text-center no-print">
+        <div class="flex gap-1 justify-center">
+          ${rec && rec.completed ? `<button onclick="showDetail('${escAttr(name)}')" class="bg-blue-50 hover:bg-blue-100 text-blue-600 px-2 py-1 rounded-lg text-xs font-semibold">Detail</button>` : ''}
+          ${rec ? `<button onclick="confirmResetStudent('${escAttr(name)}')" class="bg-red-50 hover:bg-red-100 text-red-600 px-2 py-1 rounded-lg text-xs font-semibold">Reset</button>` : ''}
+        </div>
+      </td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function escAttr(s) { return s.replace(/'/g, "\\'").replace(/"/g, '&quot;'); }
+
+// Detail
+function showDetail(name) {
+  const rec = allRecords.find(r => r.student_name === name);
+  if (!rec) return;
+  document.getElementById('detail-title').textContent = `Detail Jawaban: ${name}`;
+  let answers = [];
+  try { answers = JSON.parse(rec.answers); } catch(e) {}
+  let html = `<div class="mb-3 grid grid-cols-3 gap-2 text-sm">
+    <div class="bg-green-50 rounded-lg p-2 text-center"><span class="font-bold text-green-600">${rec.correct_count}</span><br><span class="text-xs text-gray-500">Benar</span></div>
+    <div class="bg-red-50 rounded-lg p-2 text-center"><span class="font-bold text-red-500">${rec.wrong_count}</span><br><span class="text-xs text-gray-500">Salah</span></div>
+    <div class="bg-blue-50 rounded-lg p-2 text-center"><span class="font-bold text-blue-600">${rec.score}</span><br><span class="text-xs text-gray-500">Nilai</span></div>
+  </div>`;
+  if (rec.violation_count > 0) {
+    html += `<div class="bg-yellow-50 border border-yellow-200 rounded-lg p-2 mb-3 text-xs text-yellow-700">⚠️ Pelanggaran: ${rec.violation_count} kali</div>`;
+  }
+  html += '<div class="space-y-1 max-h-96 overflow-auto">';
+  for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+    const a = answers[i] ?? -1;
+    const correct = QUESTIONS[i].answer;
+    const isCorrect = a === correct;
+    const notAnswered = a < 0;
+    html += `<div class="flex items-center gap-2 text-xs px-2 py-1 rounded ${isCorrect ? 'bg-green-50' : notAnswered ? 'bg-gray-50' : 'bg-red-50'}">
+      <span class="font-bold w-6">${i+1}.</span>
+      <span class="flex-1">Jawaban: ${notAnswered ? '-' : String.fromCharCode(65 + a)}</span>
+      <span class="text-gray-400">Kunci: ${String.fromCharCode(65 + correct)}</span>
+      <span class="${isCorrect ? 'text-green-600' : notAnswered ? 'text-gray-400' : 'text-red-500'} font-bold">${isCorrect ? '✓' : notAnswered ? '-' : '✗'}</span>
+    </div>`;
+  }
+  html += '</div>';
+  document.getElementById('detail-content').innerHTML = html;
+  document.getElementById('detail-modal').classList.remove('hidden');
+  lucide.createIcons();
+}
+
+// Reset
+let resetTargetName = null;
+function confirmResetStudent(name) {
+  resetTargetName = name;
+  const rec = allRecords.find(r => r.student_name === name);
+  if (rec) {
+    // Inline confirm via toast-like approach - just do it with a second click pattern
+    resetStudent(name);
+  }
+}
+
+async function resetStudent(name) {
+  const rec = allRecords.find(r => r.student_name === name);
+  if (!rec) return;
+  const result = await window.dataSdk.delete(rec);
+  if (result.isOk) {
+    showToast(`Data ${name} berhasil direset.`, 'success');
+  } else {
+    showToast('Gagal mereset data!');
+  }
+}
+
+function resetAllConfirm() {
+  document.getElementById('reset-all-confirm').classList.remove('hidden');
+}
+
+async function resetAll() {
+  document.getElementById('reset-all-confirm').classList.add('hidden');
+  for (const rec of [...allRecords]) {
+    await window.dataSdk.delete(rec);
+  }
+  showToast('Semua data siswa berhasil direset.', 'success');
+}
+
+// Print
+function printDaftarNilai() {
+  window.print();
+}
+
+lucide.createIcons();
+</script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9eaa2fc2b1da8093',t:'MTc3NTkxMjU1Ni4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
